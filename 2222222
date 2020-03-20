@@ -1,0 +1,282 @@
+package oop4;
+
+import oop2.Banking;
+
+public class ProductService {
+	
+	Product[] db = new Product[20];
+	int position = 0;
+	
+	
+	// 배열에 저장된 모든 상품정보를 출력한다.
+	void printAllProducts() {
+		System.out.println("==========================================================");
+		System.out.println("상품이름	제조회사	카테고리	판매가격	할인비율	재 고 량	절판여부");
+		System.out.println("==========================================================");
+		for (int i=0; i<position; i++) {
+			Product product = db[i];
+			System.out.print(product.name + "\t");
+			System.out.print(product.maker + "\t");
+			System.out.print(product.category + "\t");
+			System.out.print(product.price + "\t");
+			System.out.print(product.discountRate + "\t");
+			System.out.print(product.stock + "\t");
+			System.out.println(product.isSoldOut);
+		}
+		System.out.println("==========================================================");
+		
+	
+		
+	}
+	// 상품객체(새 상품, 이월상품)를 전달받아서 배열에 저장한다.
+	void insertProduct(Product product) {
+		db[position] = product;
+		position++;
+	}
+	// 상품명과 입고량을 전달받아서 이미 배열에 저장된 상품의 재고량을 증가시킨다.
+	void addProductStock(String name, int amount) {
+			for (int i = 0; i < position; i++) {
+				Product product= db[i];
+				if (name.equals(product.name)) {
+					product.stock += amount;
+					break;
+				}
+		
+			}
+	}
+	// 상품명과 출고량을 전달받아서 배열에서 해당 상품을 찾아서 재고량을 감소시킨다.
+	// 단, 재고량보다 출고량이 많은 경우 오류 메시지를 표시한다.
+	// 단, 재고량이 0이 되면 해당상품의 절판여부를 true로 설정한다.
+	void exportProduct(String name, int amount) {	
+		for (int i = 0; i < position; i++) {
+			Product product= db[i];
+			if (name.equals(product.name)) {
+				if(product.stock-amount > 0) {
+					product.stock -= amount;					
+					break;
+				} else if (product.stock < 0) {
+					System.out.println("남은 재고량이 출고량보다 적습니다.");
+				} else if (product.stock == 0) {
+					System.out.println("남은 재고가 0이 되었습니다.");
+					product.isSoldOut = true;
+				}
+			}
+		}
+	}
+	// 상품명을 전달받아서 배열에서 상품명이 일치하는 상품정보를 출력한다.
+	void printProductByName(String name) {	
+		for (int i = 0; i < position; i++) {
+			Product product= db[i];
+			if (name.equals(product.name)) {
+				product.display();
+				break;
+			}
+		}
+	}
+	// 제조사명을 전달 받아서 베열에서 제조사명이 일치 하는 상품정보를 출력한다.
+	void printProductByMaker(String maker) {
+		
+	}
+	// 카테고리명을  전달받아서 배열에서 카테고리명이 일치하는 상품정보를 출력한다.
+	void printProductByCategory(String category) {
+		
+	}
+	// 최저가격과 최고가격을 전달받아서 배열에서 해당 가격범위에 속하는 상품정보를 출력한다.
+	void printProductByPrice(int minPrice, int maxPrice) {
+		
+	}
+	
+}
+
+
+
+
+
+
+package oop4;
+
+import java.util.Scanner;
+
+public class ProductDemo {
+	
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		ProductService service = new ProductService();
+		
+		while(true) {
+			System.out.println();
+			System.out.println("[상품 관리 프로그램]");
+			System.out.println("==========================================================");
+			System.out.println("1.조회	2.입고	3.출고	4.검색	0.종료");
+			System.out.println("==========================================================");
+			
+			System.out.print("메뉴를 선택하세요:");
+			int menuNo = sc.nextInt();
+			
+			if (menuNo ==1) {
+				System.out.println("[전체 상품 조회]");
+				service.printAllProducts();
+				
+			} else if (menuNo == 2) {
+				System.out.println("[신규상품 입고처리]");
+				
+				System.out.println("=======================================");
+				System.out.println("1.신규상품	2.이월상품	3.재고추가");
+				System.out.println("=======================================");
+				
+				System.out.println("입고처리 대상을 선택하세요: ");
+				int stockMenuNo = sc.nextInt();
+				
+				if (stockMenuNo == 1) {
+					// 상품명, 제조사, 카테고리, 가격, 입고량을 입력받아서 입고처리한다.
+					// TODO 서비스의 신규상품 입고기능을 실행시키시오.
+					System.out.println("상품명을 입력해주세요: ");
+					String name = sc.next();
+					System.out.println("제조사를 입력해주세요: ");
+					String maker = sc.next();
+					System.out.println("카테고리를 입력해주세요: ");
+					String category = sc.next();
+					System.out.println("가격을 입력해주세요: ");
+					int price = sc.nextInt();
+					System.out.println("입고량을 입력해주세요: ");
+					int stock = sc.nextInt();
+					
+					Product product = new Product(name,  maker, category, price, stock);
+					service.insertProduct(product);
+					
+				} else if (stockMenuNo == 2) {
+					// 상품명, 제조사, 카테고리, 가격, 할인율, 입고량을 입력받아서 입고처리한다.
+					// TODO 서비스의 신규상품 입고기능을 실행시키시오.
+					System.out.println("상품명을 입력해주세요: ");
+					String name = sc.next();
+					System.out.println("제조사를 입력해주세요: ");
+					String maker = sc.next();
+					System.out.println("카테고리를 입력해주세요: ");
+					String category = sc.next();
+					System.out.println("가격을 입력해주세요: ");
+					int price = sc.nextInt();
+					System.out.println("할인율을 입력해주세요: ");
+					double discountRate = sc.nextDouble();
+					System.out.println("입고량을 입력해주세요: ");
+					int stock = sc.nextInt();
+					
+					Product product = new Product(name,  maker, category, price, discountRate, stock);
+					service.insertProduct(product);
+					
+				} else if (stockMenuNo == 3) {
+					// 상품명, 입고량을 입력받아서 입고처리한다.
+					// TODO 서비스의 재고량 증가기능을 실행시키시오.
+					System.out.println("상품명을 입력해주세요: ");
+					String name = sc.next();
+					System.out.println("입고량을 입력해주세요: ");
+					int amount = sc.nextInt();
+					
+					service.addProductStock(name, amount);
+				}				
+			} else if (menuNo == 3) {
+				System.out.println("[상품 출고처리]");
+				// 상품명과 출고량을 입력받아서 출고처리한다.
+				// TODO 서비스의 재고량 감소기능을 실행시키시오.
+				System.out.println("상품명을 입력해주세요: ");
+				String name = sc.next();
+				System.out.println("출고량을 입력해주세요: ");
+				int amount = sc.nextInt();
+				
+				service.exportProduct(name, amount);
+				
+				
+			} else if (menuNo == 4) {
+				System.out.println("[상품 검색]");
+				
+				System.out.println("=====================================================");
+				System.out.println("1.이름	2. 제조사	3.카테고리	4.가격");
+				System.out.println("=====================================================");
+				
+				System.out.println("검색방식을 선택하세요: ");
+				int serchMenuNo = sc.nextInt();
+				
+				if (serchMenuNo == 1) {
+					// 제목을 입력받아서 상품을 검색하시오.
+					// TODO 서비스의 제목검색기능을 실행하시오.
+					System.out.println("검색할 상품 이름을 입력하세요: ");
+					String name = sc.next();
+					service.printProductByName(name);
+					
+				} else if (serchMenuNo == 2) {
+					// 제조사를 입력받아서 상품을 검색하시오.
+					// TODO 서비스의 제조사검색기능을 실행하시오.
+					
+				} else if (serchMenuNo == 3) {
+					// 카테고리를 입력받아서 상품을 검색하시오.
+					// TODO 서비스의 카테고리검색기능을 실행하시오.
+					
+				} else if (serchMenuNo == 4) {
+					// 최소가격과 최대가격을 입력받아서 그 가격범위내의 상품을 검색하시오.
+					// TODO 서비스의 가격검색기능을 실행하시오.
+					
+				}
+				
+			} else if (menuNo == 0) {
+				System.out.println("프로그램 종료");
+				break;
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+package oop4;
+
+public class Product {
+	
+	String name;
+	String maker;
+	String category;
+	int price;
+	double discountRate;
+	int stock;
+	boolean isSoldOut;
+	
+	Product(){}
+		
+	// 신제품 객체의 맴버변수 초기화에 적합한 생성자 메소드
+	Product(String name, String maker, String category, int price,int stock){
+		this(name, maker, category, price, 0.0, stock, false);
+	}
+	
+	// 이월제품 객체의 맴버변수 초기화에 적합한 생성자 메소드
+	Product(String name, String maker, String category, int price, double discountRate,int stock){
+		this(name, maker, category, price, discountRate,  stock, false);
+	}
+	
+	Product(String name, String maker, String category, int price, double discountRate, int stock, boolean isSoldOut){
+		this.name=name;
+		this.maker=maker;
+		this.category=category;
+		this.price=price;
+		this.discountRate=discountRate;
+		this.stock=stock;
+		this.isSoldOut=isSoldOut;
+		}
+	
+	
+	void display() {
+		System.out.println("------------- 상품정보 ---------------");
+		System.out.println("상품이름: " + name);
+		System.out.println("제조회사: " + maker);
+		System.out.println("카테고리: " + category);
+		System.out.println("판매가격: " + price);
+		System.out.println("할인비율: " + discountRate);
+		System.out.println("재  고  량: " + stock);
+		System.out.println("절판여부: " + isSoldOut);
+		System.out.println("-------------------------------------");
+	}
+
+}
+
