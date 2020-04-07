@@ -3,6 +3,7 @@ package com.sample.school.repository;
 import java.util.Arrays;
 
 import com.sample.school.vo.Course;
+import com.sample.school.vo.Registration;
 
 public class CourseRepository {
 
@@ -36,8 +37,14 @@ public class CourseRepository {
 	}
 	
 	public Course getCourseByNo(int courseNo) {
-		
-		return null;
+		Course course = null;
+		Course[] courses = getAllCourse();
+		for (int i=0; i<position; i++) {
+			if(courses[i].getNo()==courseNo) {
+				course=courses[i];
+			}
+		}
+		return course;
 	}
 	
 	public Course[] getAllCourse() {

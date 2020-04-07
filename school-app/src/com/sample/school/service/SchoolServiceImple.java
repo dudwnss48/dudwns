@@ -29,6 +29,7 @@ public class SchoolServiceImple implements SchoolService {
 			}
 		}
 		professorRepo.insertProfessor(professor);
+		System.out.println("등록을 완료하였습니다.");
 	}
 
 
@@ -43,6 +44,7 @@ public class SchoolServiceImple implements SchoolService {
 			}
 		}
 		subjectRepo.insertSubject(subject);
+		System.out.println("등록을 완료하였습니다.");
 	}
 
 	@Override
@@ -55,15 +57,21 @@ public class SchoolServiceImple implements SchoolService {
 			}
 		}
 		studentRepo.insertStudent(student);
+		System.out.println("등록을 완료하였습니다.");
 	}
-	
+
 	@Override
 	public void findSubject(int professorNo) {
 		Subject[] subjects = subjectRepo.getAllSubject();
 		Professor professor = professorRepo.getProfessorByNo(professorNo);
+		if (professor==null) {
+			System.out.println("없는 교수번호입니다.");
+			return;
+		}
 		for(Subject sub : subjects) {
 			if(sub.getDept().equals(professor.getDept())) {
 				System.out.println(sub.getTitle());
+				System.out.println(sub.getNo()+	sub.getTitle()	+sub.getDept()	+sub.getCredit());
 			}
 		}
 	}
@@ -81,10 +89,10 @@ public class SchoolServiceImple implements SchoolService {
 		course.setProfessorNo(professorNo);
 		course.setQuota(quota);
 		courseRepo.insertCourse(course);
-		
-		System.out.println("신규 개설과정을 등록하였습니다.");
+
+		System.out.println("등록을 완료하였습니다.");
 	}
-	
+
 	@Override
 	public void findCourse(int professorNo) {
 		Professor professor = professorRepo.getProfessorByNo(professorNo);
@@ -94,16 +102,13 @@ public class SchoolServiceImple implements SchoolService {
 			if (cou.getProfessorNo()==professorNo) {
 				Course c1= courseRepo.getCourseByNo(cou.getNo());
 				Subject subject = subjectRepo.getSubjectByNo(cou.getSubjectNo());
-				System.out.println("개설과정번호"+cou.getNo() + "\t\t" + "과정명" +cou.getName() + "\t\t" + "과목명" +subject.getTitle());
-				
+				System.out.println("개설과정번호"+cou.getNo() + "\t\t과정명" +cou.getName() + "\t\t과목명" +subject.getTitle());
+
 			}  
 		}
-		
+
 	}
-	public static void main(String[] args) {
-		SchoolServiceImple service = new SchoolServiceImple();
-		service.findCourse(20001);
-	}
+
 
 	@Override
 	public void findSubjectByStudentNo(int studentNo) {
@@ -111,14 +116,14 @@ public class SchoolServiceImple implements SchoolService {
 		Student student = studentRepo.getStudentByNo(studentNo);
 		for(Subject sub : subjects) {
 			if(sub.getDept().equals(student.getDept())) {
-				System.out.println(sub.getTitle());
+				System.out.println(sub.getNo() + "\t" + sub.getTitle()+ "\t" + sub.getDept()+ "\t" + sub.getCredit());
 			}
 		}
-		
-		
+
+
 	}
-	
-	
+
+
 	@Override
 	public void findCourseApplicant(int professorNo, int courseNo) {
 		Professor p1 = professorRepo.getProfessorByNo(professorNo);
@@ -133,37 +138,129 @@ public class SchoolServiceImple implements SchoolService {
 			}
 		}
 	}
-		
+
 	@Override
 	public void giveScore(int professorNo, int registrationNo, int score) {
 		Registration r1 = registrationRepo.getRegistrationByNo(registrationNo);
 		Course c1 = courseRepo.getCourseByNo(r1.getCourseNo());
-		if (c1.getProfessorNo()==professorNo) {
-			System.out.println("성적: " + r1.getScore());
+		if (c1.getProfessorNo()!=professorNo) {
+			System.out.println("교수번호와 수강신청번호가 일치하지 않습니다.");
+		} else if (c1.getProfessorNo()==professorNo) {
+			r1.setScore(score);
+			System.out.println("성적입력이 완료되었습니다.");
 		}
-		 
+
 	}
-	
+
+
 	@Override
-	public void registSubject() {
+	public void findRegistedSubject(int studentNo) {
+		Registration[] registrations = registrationRepo.getAllRegistrationis();
+		for(int i =0; i<registrations.length;i++) {
+			if (registrations[i].getStudentNo() == studentNo) {
+				Course c1 = courseRepo.getCourseByNo(registrations[i].getCourseNo());
+				System.out.println("수강신청번호: " + registrations[i].getNo() + "\t개설과정명: " + c1 + "\t취소여부: " + registrations[i].isCancel());
+			}
+		}
+
+
+
+	}
+
+	@Override
+	public void iscancleSubject(int studentNo, int registrationNo) {
+		Registration r1 = registrationRepo.getRegistrationByNo(registrationNo);
+		if(r1.getStudentNo() == studentNo) {
+			r1.setCancel(true);
+		}
+
+
+	}
+	@Override
+	public void registSubject(int studentNo, int courseNo) {
+		Student s1 = studentRepo.getStudentByNo(studentNo);
+		Course c1 = courseRepo.getCourseByNo(courseNo);
+		Registration [] r1 = registrationRepo.getAllRegistrationis();
+		if(s1 == null) {
+			System.out.println("존재하지 않은 학생입니다. 다시 입력해주세요");
+			return;
+		}
+		if(c1 == null) {
+			System.out.println("존재하지 않은 과정입니다. 다시 입력해주세요");
+			return;
+		}
+		if(c1.getQuota() > r1.length) {
+			System.out.println("정원 초과되었습니다.");
+			return;
+		}
+		String studentDept = s1.getDept();
 		
+			
+		Registration registration = new Registration();
+		registration.setStudentNo(s1.getNo());
+		registration.setCourseNo(c1.getNo());
+		registrationRepo.insertRegistration(registration);
 		
 	}
 
 	@Override
-	public void findRegistedSubject() {
-		 
-		
-	}
+	public void findScore(int studentNo) {
+		Registration [] r1 = registrationRepo.getAllRegistrationis();
+		int sumOfAllScore = 0;
+		for (int i = 0; i < r1.length;i++) {
+			if (r1[i].getStudentNo() == studentNo) {
+				Course c1 = courseRepo.getCourseByNo(r1[i].getCourseNo());
+				Subject s1 = subjectRepo.getSubjectByNo(c1.getSubjectNo());
+				Professor p1 = professorRepo.getProfessorByNo(c1.getProfessorNo());
+				String gradePoint = null;
+				if (r1[i].getScore() >= 95) {
+					gradePoint="A+";
+				} else if (r1[i].getScore() >= 90) {
+					gradePoint="A";
+				} else if (r1[i].getScore() >= 85) {
+					gradePoint="B+";
+				} else if (r1[i].getScore() >= 80) {
+					gradePoint="B";
+				} else if (r1[i].getScore() >= 75) {
+					gradePoint="C+";
+				} else if (r1[i].getScore() >= 70) {
+					gradePoint="C";
+				} else if (r1[i].getScore() >= 65) {
+					gradePoint="D+";
+				} else if (r1[i].getScore() >= 60) {
+					gradePoint="D";
+				} else if (r1[i].getScore() < 60) {
+					gradePoint="F";
+				}
+				sumOfAllScore =  sumOfAllScore + r1[i].getScore();
+				int averageScore = sumOfAllScore/r1.length;
+				
+				String allGradePoint = null;
+				if (averageScore >= 95) {
+					allGradePoint="A+";
+				} else if (averageScore >= 90) {
+					allGradePoint="A";
+				} else if (averageScore >= 85) {
+					allGradePoint="B+";
+				} else if (averageScore >= 80) {
+					allGradePoint="B";
+				} else if (averageScore >= 75) {
+					allGradePoint="C+";
+				} else if (averageScore >= 70) {
+					allGradePoint="C";
+				} else if (averageScore >= 65) {
+					allGradePoint="D+";
+				} else if (averageScore >= 60) {
+					allGradePoint="D";
+				} else if (averageScore < 60) {
+					allGradePoint="F";
+				}
+				
+				
+				System.out.println("과목번호: "+c1.getSubjectNo()+ " 과목명: " +s1.getTitle()+ "개설과정명: " +c1.getName() + " 담당교수명:" + p1.getName() +  "성적(점수): " +r1[i].getScore()   +
+						" 학점: " +gradePoint + "전체  평균: " +averageScore+ "전체  학점: " + allGradePoint );
 
-	@Override
-	public void iscancleSubject() {
-		 
+			}
+		}
 	}
-
-	@Override
-	public void findScore() {
-		
-	}
-
 }

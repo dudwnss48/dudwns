@@ -3,6 +3,7 @@ package com.sample.school.repository;
 import java.util.Arrays;
 
 import com.sample.school.vo.Registration;
+import com.sample.school.vo.Subject;
 
 public class RegistrationRepository {
 
@@ -35,7 +36,14 @@ public class RegistrationRepository {
 	}
 	
 	public Registration getRegistrationByNo(int registerationNo) {
-		return null;
+		Registration registration = null;
+		Registration[] registrations = getAllRegistrationis();
+		for (int i=0; i<position; i++) {
+			if(registrations[i].getNo()==registerationNo) {
+				registration=registrations[i];
+			}
+		}
+		return registration;
 	}
 	
 	public Registration[] getAllRegistrationis() {

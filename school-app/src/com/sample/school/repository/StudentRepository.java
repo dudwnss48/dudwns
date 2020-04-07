@@ -2,6 +2,7 @@ package com.sample.school.repository;
 
 import java.util.Arrays;
 
+import com.sample.school.vo.Registration;
 import com.sample.school.vo.Student;
 
 public class StudentRepository {
@@ -28,8 +29,14 @@ public class StudentRepository {
 	}
 	
 	public Student getStudentByNo(int studentNo) {
-		
-		return null;
+		Student student = null;
+		Student[] students = getAllStudents();
+		for (int i=0; i<position; i++) {
+			if(students[i].getNo()==studentNo) {
+				student=students[i];
+			}
+		}
+		return student;
 	}
 	
 	public Student[] getAllStudents() {

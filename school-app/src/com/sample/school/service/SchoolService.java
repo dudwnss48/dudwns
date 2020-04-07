@@ -69,15 +69,15 @@ public interface SchoolService {
 	void findSubjectByStudentNo(int studentNo); 
 
 //		* 	<li>수강신청</li>
-	void registSubject();
+	void registSubject(int studentNo, int courseNo);
 
 //		* 	<li>수강신청 현황 조회</li>
-	void findRegistedSubject();
+	void findRegistedSubject(int studentNo);
 
 //		* 	<li>수강신청 취소</li>
-	void iscancleSubject();
+	void iscancleSubject(int studentNo, int registrationNo);
 
 //		* 	<li>성적 조회</li>
-	void findScore();
+	void findScore(int studentNo);
 
 }
