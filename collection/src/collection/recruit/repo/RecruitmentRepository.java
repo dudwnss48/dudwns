@@ -31,7 +31,7 @@ public class RecruitmentRepository {
 	public void deleteRecruitmentByNo(int recruitmentNo) {
 		for(Recruitment recruitment : db) {
 			if(recruitment.getNo() == recruitmentNo) {
-				recruitment=null;
+				db.remove(recruitment);
 			}
 		}
 	}

@@ -110,7 +110,7 @@ public class RecruitApp {
 				System.out.println("1.채용신청서 조회  2.채용신청서 상세조회  3.채용신청서 심사");
 				System.out.println("==========================================================================");
 				
-				System.out.print("구직자 메뉴를 선택하세요");
+				System.out.print("인사담당관 메뉴를 선택하세요");
 				int empMenuNo = scanner.nextInt();
 				
 				if (empMenuNo == 1) {
