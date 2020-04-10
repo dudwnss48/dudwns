@@ -36,16 +36,30 @@ public class RecruitmentService {
 
 	// 구직신청 상태 조회 기능
 	public void printRecruitmentDetail(int recruitmentNo) {
+		ArrayList<Recruitment> recruitments = repo.getAllRecruitments();
 		Recruitment recruitment = repo.getRecruitmentByNo(recruitmentNo);
 		Resume resume = recruitment.getResume();
 		ArrayList<Career> careers = recruitment.getCareers();
-		System.out.println("구직신청번호\t구직자이름\t전화번호\t지원부서\t재직했던 회사명\t근무했던 부서명\t최종직급\t근무기간\t합격여부");
-		for(Career career :careers) {
-			String c1 = career.getCompanyName();
-			String c2 = career.getDept();
-			String c3 = career.getPosition();
-			int c4 = career.getYear();
-			System.out.println(recruitmentNo+"\t"+"\t"+resume.getName()+"\t"+resume.getTel()+"\t"+resume.getDept()+"\t"+c1+"\t"+c2+"\t"+c3+"\t"+c4+"\t"+recruitment.isPassed());
+		System.out.println("구직신청번호\t구직자이름\t전화번호\t지원부서\t재직했던 회사명\t근무했던 부서명\t최종직급\t근무기간\t합격여부\t같은부서 신청수\t같은부서를 신청한 지원자들의 평균근로기간");
+		for(Recruitment r1 :recruitments) {
+			int count = 0;
+			ArrayList<Career>careers1 = r1.getCareers();
+			careers1.g
+			if(resume.getDept() == r1.getResume().getDept()) {
+				count++;
+			
+
+				}
+			for(Career career :careers) {
+				String c1 = career.getCompanyName();
+				String c2 = career.getDept();
+				String c3 = career.getPosition();
+				int c4 = career.getYear();
+				
+				
+
+			System.out.println(recruitmentNo+"\t"+"\t"+resume.getName()+"\t"+resume.getTel()+"\t"+resume.getDept()+"\t"+c1+"\t"+c2+"\t"+c3+"\t"+c4+"\t"+recruitment.isPassed() + "\t" + count);
+			}
 		}
 
 		// 레포지토리에서 구직신청번호에 해당하는 구직신청객체를 조회해서 화면에 출력한다.

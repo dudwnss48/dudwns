@@ -1,9 +1,11 @@
 package collection.recruit;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import collection.recruit.service.RecruitmentService;
 import collection.recruit.vo.Career;
+import collection.recruit.vo.Recruitment;
 import collection.recruit.vo.Resume;
 
 public class RecruitApp {
@@ -22,7 +24,7 @@ public class RecruitApp {
 			
 			if (menuNo == 1) {
 				System.out.println("==========================================================================");
-				System.out.println("1.이력서등록 2.경력사항등록 3.채용상태확인 4.이력서수정 5.구직신청 삭제");
+				System.out.println("1.이력서등록	2.경력사항등록	3.채용상태확인	4.이력서수정	5.구직신청 삭제	6.구직신청현황");
 				System.out.println("==========================================================================");
 				
 				System.out.print("구직자 메뉴를 선택하세요");
@@ -103,6 +105,7 @@ public class RecruitApp {
 					int recruitmentNo = scanner.nextInt(); 
 					
 					service.deleteRecruitment(recruitmentNo);
+					
 				} 
 				
 			} else if (menuNo == 2) {
