@@ -1,0 +1,8 @@
+열거형
+			- 열거형의 여러 개의 상수를 빠르게 정의할 수 있다.
+			- 열거형은 컴파일시 값이 체크된다.
+			- 열거형은 java.lang.Enum 클래스로부터 다양한 메소드를 상속받았다.
+					String name()
+					int ordinal()
+					static T valueOf(String name)
+					static T[] values()
