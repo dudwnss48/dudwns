@@ -1,28 +1,65 @@
 package com.sample.bookstore.vo;
 
+import java.util.Date;
+
 public class User {
-	
-	public int no;
-	public String name;
-	public String tel;
-	public int point;
-	public boolean isDisabled;		// false : 사용가능 고객, true : 탈퇴처리된 고객
-	
-	public User() {
-		// TODO Auto-generated constructor stub
+	//sample_book_users 테이블
+	private String id;
+	private String password;
+	private String name;
+	private String email;
+	private int point;
+	private Date registeredDate;
+
+	public User() {}
+
+	public String getId() {
+		return id;
 	}
-	
-	public User(int no, String name, String tel, int point, boolean isDisabled) {
-		super();
-		this.no = no;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
 		this.name = name;
-		this.tel = tel;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getPoint() {
+		return point;
+	}
+
+	public void setPoint(int point) {
 		this.point = point;
-		this.isDisabled = isDisabled;
+	}
+
+	public Date getRegisteredDate() {
+		return registeredDate;
+	}
+
+	public void setRegisteredDate(Date registeredDate) {
+		this.registeredDate = registeredDate;
 	}
 	
+
 }
-		
-
-	
-
