@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-public class Demo3 {
+public class Demo4 {
 	
 	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	private static String nextString() throws Exception{
@@ -24,11 +24,19 @@ public class Demo3 {
 	public static void main(String[] args) throws Exception{
 
 		
-		System.out.println("[도서검색]");
-		System.out.print("제목을 입력하세요 : ");
-		String keyword = nextString();
-		
-		
+		System.out.println("책 등록하기");
+		System.out.print("제목을 입력하세요  : ");
+		String title = nextString();
+		System.out.print("저자를 입력하세요  : ");
+		String writer = nextString();
+		System.out.print("장르를 입력하세요  : ");
+		String genre = nextString();
+		System.out.print("출판사를 입력하세요  : ");
+		String publisher = nextString();
+		System.out.print("가격을 입력하세요  : ");
+		int price = nextInt();
+		System.out.print("할인 가격을 입력하세요  : ");
+		int discountPrice = nextInt();
 		
 		//1.JDBC 드라이버를 JVM의 드라이버 레지스트리에 등록하기
 		//2.데이터베이스와 연결을 담당하는 Connection 객체 획득하기
@@ -44,23 +52,21 @@ public class Demo3 {
 		try {
 			Class.forName("oracle.jdbc.OracleDriver");
 			connection = DriverManager.getConnection(url, user, password);
-			String sql = "SELECT * FROM SAMPLE_BOOKS WHERE BOOK_TITLE LIKE '%'||?||'%' ORDER BY BOOK_NO DESC";
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, keyword);
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				int no = rs.getInt("BOOK_NO");
-				String title = rs.getString("BOOK_TITLE");
-				String writer = rs.getString("BOOK_WRITE");
-				String genre = rs.getString("BOOK_GENRE");
-				String publisher = rs.getString("BOOK_PUBLISHER");
-				int price = rs.getInt("BOOK_PRICE");
-				int discountPrice = rs.getInt("BOOK_DISCOUNT_PRICE");
-				java.util.Date date = rs.getDate("BOOK_REGISTERED_DATE");
-				
-				System.out.printf("%d,%s,%s,%s,%s,%d,%d,"+date+"\n",no,title,writer,genre,publisher,price,discountPrice);
-			}
 			
+			String sql = "INSERT INTO SAMPLE_BOOKS"
+					+ "(BOOK_NO, BOOK_TITLE, BOOK_WRITE,BOOK_GENRE, BOOK_PUBLISHER,"
+					+ "BOOK_PRICE, BOOK_DISCOUNT_PRICE, BOOK_REGISTERED_DATE)"
+					+ "VALUES (SAMPLE_BOOK_SEQ.NEXTVAL, ?,?,?,?,?,?,SYSDATE)";
+			
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, writer);
+			pstmt.setString(3, genre);
+			pstmt.setString(4, publisher);
+			pstmt.setInt(5, price);
+			pstmt.setInt(6, discountPrice);
+			int count = pstmt.executeUpdate();
+			System.out.printf("[%d]개의 책이 등록되었습니다.\n",count);
 			
 			
 		} catch (Exception e) {
