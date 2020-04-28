@@ -21,6 +21,7 @@ public class AnswerDAO {
 		pstmt.setInt(2, answer.getQuestionNo());
 		pstmt.executeQuery();
 		
+		
 		pstmt.close();
 		conn.close();
 		

@@ -147,7 +147,7 @@ public class BookDAO {
 		Book book = new Book();
 		book.setNo(rs.getInt("book_no"));
 		book.setTitle(rs.getString("book_title"));
-		book.setWriter(rs.getString("book_write"));
+		book.setWriter(rs.getString("book_writer"));
 		book.setGenre(rs.getString("book_genre"));
 		book.setPublisher(rs.getString("book_publisher"));
 		book.setPrice(rs.getInt("book_price"));

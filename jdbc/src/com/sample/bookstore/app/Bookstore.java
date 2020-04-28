@@ -8,6 +8,7 @@ import com.sample.bookstore.vo.Answer;
 import com.sample.bookstore.vo.Book;
 import com.sample.bookstore.vo.Order;
 import com.sample.bookstore.vo.Question;
+import com.sample.bookstore.vo.Review;
 import com.sample.bookstore.vo.User;
 
 public class Bookstore {
@@ -21,9 +22,9 @@ public class Bookstore {
 		while(true) {
 			
 			System.out.println("---------------------------------------------------------------------");
-			System.out.println("1.가입	2.책 검색	3.책 정보	4.주문	5.내주문	6.주문정보	7.문의게시판	0.종료");
+			System.out.println("1.가입		2.책 검색		3.책 정보		4.주문		5.내주문		6.주문정보	7.문의게시판		8.커뮤니티	0.종료");
 			System.out.println("---------------------------------------------------------------------");
-			System.out.print("메뉴를 선택해주세요 : 	");
+			System.out.print("메뉴를 선택해주세요 : ");
 			
 			int menuNum = KeyboardUtil.nextInt();
 			
@@ -158,23 +159,24 @@ public class Bookstore {
 				System.out.println("---------------------------------------------------------------------");
 				System.out.println("1.질문전체조회	2.질문등록	3.질문조회	4.질문글삭제	5.답변전체조회	6.답변등록");
 				System.out.println("---------------------------------------------------------------------");
-				System.out.print("메뉴를 선택해주세요 : 	");
+				System.out.print("메뉴를 선택해주세요: ");
 				int questionMenuNum = KeyboardUtil.nextInt();
 				if(questionMenuNum == 1) {
 					System.out.println();
 					System.out.println("[질문 전체조회]");
 					List<Question> questions = service.getAllQuestion();
-					System.out.println("번호\t제목\t내용\t아이디\t이름\t조회수\t등록일\t질문답변상태\t질문종류\t답변번호\t답변내용");
+					System.out.println("번호 \t 제목 \t 내용\t 아이디\t 이름\t 조회수\t 등록일\t 질문답변상태\t 질문종류\t 답변번호\t 답변내용");
 					
 					System.out.println(questions.size());
 					for(Question question : questions) {
 						System.out.println(question.getNo()+"\t"+question.getTitle()
 						+"\t"+question.getContent()+"\t"+question.getUser().getUserId()
-						+"\t"+question.getUser().getUserName()+"\t"+question.getViewCount()
-						+"\t"+question.getRegisteredDate()+"\t"+question.getType()
+						+"\t"+question.getUser().getUserName()+"\t\t"+question.getViewCount()
+						+"\t"+question.getRegisteredDate()+"\t"+question.getStatus()+"\t"+question.getType()
 						+"\t"+question.getAnswer().getNo()+"\t"+question.getAnswer().getContent());
-					}
-					
+					} 
+					System.out.println();
+					System.out.println();
 				} else if (questionMenuNum == 2) {
 					
 					System.out.println();
@@ -194,6 +196,7 @@ public class Bookstore {
 					question.setTitle(title);
 					question.setContent(content);
 					question.setType(type);
+					
 					service.newAddQuestion(question);
 					
 				} else if (questionMenuNum == 3) {
@@ -202,6 +205,7 @@ public class Bookstore {
 					System.out.println("[질문조회]");
 					System.out.print("질문 번호를 입력해주세요 : ");
 					int questionNo = KeyboardUtil.nextInt();
+					
 					Question question = service.getQuestion(questionNo);
 					System.out.println("질문  번호 : " + question.getNo());
 					System.out.println("질문  제목 : " + question.getTitle());
@@ -237,7 +241,7 @@ public class Bookstore {
 										
 					Answer answer = service.getAnswer(questionNo);
 					if(answer == null) {
-						System.out.println("없는 답변입니다.");
+						System.out.println("답변이 없습니다.");
 						
 					}else {
 						
@@ -250,9 +254,9 @@ public class Bookstore {
 				} else if (questionMenuNum == 6) {
 					System.out.println();
 					System.out.println("[답변하기]");
-					System.out.print("질문 번호를 입력해주세요 : ");
+					System.out.print("질문 번호를 입력해주세요: ");
 					int questionNo = KeyboardUtil.nextInt();
-					System.out.print("답변 내용을 입력해주세요 :	");
+					System.out.print("답변 내용을 입력해주세요: ");
 					String content = KeyboardUtil.nextString();
 					boolean isSuccess = service.newAddAnswer(questionNo, content);
 					if(isSuccess) {
@@ -263,7 +267,54 @@ public class Bookstore {
 				}
 				
 				
-			} else if (menuNum == 0) {
+			}else if (menuNum == 8) {
+				System.out.println("커뮤니티");
+				
+				System.out.println("1.추천하기 2.리뷰쓰기 ");
+				
+				System.out.print("번호를 입력해주세요 : ");
+				int cumuNo = KeyboardUtil.nextInt();
+				
+				if (cumuNo ==1) {
+					System.out.println("[추천하기]");
+					System.out.println("책번호를 입력하세요: ");
+					int bookNo = KeyboardUtil.nextInt();
+					System.out.println("유저 아이디를 입력하세요: ");
+					String userId = KeyboardUtil.nextString();
+					service.addLikes(bookNo, userId);
+					
+					System.out.println("추천이 완료되었습니다.");
+					
+				} else if (cumuNo == 2) {
+					
+					System.out.println("[리뷰쓰기]");
+					
+					
+					System.out.println("책번호를 입력하세요: ");
+					int bookNo = KeyboardUtil.nextInt();
+					System.out.println("유저 아이디를 입력하세요: ");
+					String userId = KeyboardUtil.nextString();
+					System.out.println("리뷰를 입력하세요: ");
+					String content = KeyboardUtil.nextString();
+					System.out.println("포인트를 입력하세요: ");
+					int point = KeyboardUtil.nextInt();
+					
+					Review review = new Review();
+					
+					Book book = new Book();
+					book.setNo(bookNo);
+					
+					User user = new User();
+					user.setUserId(userId);
+					
+					review.setUser(user);
+					review.setBook(book);
+					review.setContent(content);
+					review.setPoint(point);
+				}
+				
+				
+			}else if (menuNum == 0) {
 				
 				System.out.println("프로그램 종료");
 				KeyboardUtil.close();

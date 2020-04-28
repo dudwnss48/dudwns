@@ -25,7 +25,9 @@ public class QuestionDAO {
 		pstmt.setString(2, question.getUser().getUserId());
 		pstmt.setString(3, question.getContent());
 		pstmt.setString(4, question.getType());
+		
 		pstmt.executeUpdate();
+		
 		pstmt.close();
 		conn.close();
 		
@@ -102,7 +104,9 @@ public class QuestionDAO {
 		pstmt = conn.prepareStatement(QueryUtil.getSQL("question.removeQuestion"));
 		pstmt.setInt(1, questionNo);
 		pstmt.setString(2, userId);
+		
 		pstmt.executeQuery();
+		
 		pstmt.close();
 		conn.close();
 		

@@ -6,6 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import com.sample.bookstore.dao.AnswerDAO;
 import com.sample.bookstore.dao.BookDAO;
+import com.sample.bookstore.dao.LikeDao;
 import com.sample.bookstore.dao.OrderDAO;
 import com.sample.bookstore.dao.QuestionDAO;
 import com.sample.bookstore.dao.UserDAO;
@@ -23,6 +24,7 @@ public class BookstoreService {
 	OrderDAO orderDao = new OrderDAO();
 	QuestionDAO questionDao = new QuestionDAO();
 	AnswerDAO answerDao = new AnswerDAO();
+	LikeDao likeDao = new LikeDao();
 	
 	public boolean newAddQuestion(Question question) throws Exception {
 		User user = userDao.getUserById(question.getUser().getUserId());
@@ -38,8 +40,11 @@ public class BookstoreService {
 			return false;
 			
 		} else {
+			Question question = questionDao.getQuestionByNo(questionNo);
+			question.setStatus("Y");
 			
 			answer = new Answer();
+			
 			answer.setQuestionNo(questionNo);
 			answer.setContent(content);
 			answerDao.addAnswer(answer);
@@ -58,7 +63,11 @@ public class BookstoreService {
 	}
 	public boolean removeQuestion(int questionNo, String userId) throws Exception{
 		User user = userDao.getUserById(userId);
+		Question question = questionDao.getQuestionByNo(questionNo);
 		if(user == null) {
+			return false;
+		}
+		if(question.getStatus() == "Y") {
 			return false;
 		}
 		questionDao.removeQuestion(questionNo, userId);
@@ -149,5 +158,11 @@ public class BookstoreService {
 		 Order order = orderDao.getOrderByNo(orderNo);
 		return order;
 	}
+	
+	public void addLikes (int bookNo, String userId) throws Exception {
+		likeDao.addLikes(bookNo, userId);
+	}
+	
+	
 	
 }
