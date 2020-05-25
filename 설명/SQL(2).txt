@@ -1,0 +1,184 @@
+여러 테이블에서 데이터 조회하기
+	- 테이블 조인하기
+		- 조회할 데이터가 2개 이상의 테이블에 흩어져서 존재하는 경우 테이블의 조인이 필요하다.
+		- 테이블 조인 방법
+			select ~
+			from 테이블1, 테이블2, ...
+			* from절에 조인할 테이블을 나열하면 된다.
+			* 테이블1의 모든 행과 테이블 2의 모든 행이 결합된다.
+			* 테이블1의 행갯수 x 테이블2의 행갯수 만큼의 행이 조회된다.
+		- 조인 조건을 활용해서 서로 관련있는 행들끼리 결합된 행만 조회하기
+			select ~
+			from 테이블1 A, 테이블2 B
+			where A.컬럼명, = B.컬럼명;		// 조인 조건
+			* n개의 테이블을 조인하면 n-1개 이상의 조인 조건이 필요하다.
+	- 테이블 조인의 종류
+		- 등가조인
+			두 테이블의 컬럼값이 동일한 값을 가지고 있을 때 사용한다.
+			조인조건에 동등연산자(=)를 사용한다.
+			예)	외래키			  기본키
+				-------------------------------------------------------------
+				employees의 department_id와 departments의 department_id  : 부서번호를 가짐
+				employees의 job_id와 	  jobs의 job_id		     : 직종번호를 가짐
+				departments의 manger_id와 	  employees의employee_id	     : 직원번호를 가짐	
+				departments의 location_id와 	  locatios의 location_id	     : 위치번호를 가짐
+			예)
+				select A.first_name, A.salary, B.department_name
+				from employees A, departments B
+				where A.department_id = B.department_id;
+				* 직원의 소속부서아이디와 부서의 부서아이디가 같은 값을 가진 행끼리 조인시킨다.
+
+			* 주로 기본키와 외래키를 조인의 보조수단으로 포함한다.
+			* 기본키는 행을 대표하는 값을 포함하고 있는 컬럼이다.
+			* 외래키는 다른 테이블의 특정 컬럼값을 참조하는 값만을 가지는 컬럼이다.
+		- 비 등가조인
+			동등연산자(=)가 아닌 다른 연산자를 포함하는 조인조건을 사용한다.
+			예)
+				employees의 salary와 job_grades의 lowest_sal, highest_sal
+			* 비등가 조인은 주로 값이 특정범위내에 속하는 행끼리 조인시킨다.
+			* 급여등급, 고객등급 등과 같이 특정 범위에 속할 때 해당 등급을 가진 행과 조인시킨다.
+			예)
+				select A.first_name, A.salay, B.gra
+				from employees A, job_grades B
+				where A.salary >= B.lowest_sal and A.salary <= B.highest_sal;
+				* 급여가 최소급여와 최대급여 사이인 행들끼리만 조인시킨다.
+				* 동등연산자(=) 대신 >,>=,<,<= 와 같은 연산자가 사용되는 조인이다.
+		- 자체조인
+			동일한 테이블을 서로 조인시키는 것이다.
+			예)
+				employees의 manager_id와 employees의 employee_id
+				* 각 사원의 관리자 이름을 찾기 위해서는 employees 테이블끼리 조인해야 한다.
+				* 자체 조인 할 때는 테이블을 각각 직원용, 관리자용으로 구분해서 조인을 시킨다.
+				* 직원의 정보는 직원용 employees에서 관리자정보는 관리자용 employees에서 조회한다.
+			예)
+				SELECT emp.first_name 직원명, emp.salary 직원급여
+				   	 ,mgr.first_name 관리자명, mgr.salary 관리자급여
+				FROM employees EMP, employees MGR
+				where emp.manager_id = mgr.employee_id
+				* 같은 테이블을 자체조인 할 때는 각 테이블을 적절한 별친을 붙이는 것이 좋다.
+				* 값을 조회할 때 혼동되지 않도록 주의가 필요하다.
+			* 자체조인이 필요한 정보는 주로 조직정보, 메뉴정보, 카테고리정보 등이 자체조인이 필요한 테이블들이다.
+			* 이런 테이블들은 거의 대부분 하나의 테이블 안에 상위정보와 하위정보가 같이 있다.
+		- 포괄조인
+			조인조건을 만족시키지 못하는 행도 조회결과에 포함시키는 조인이다.
+			* 포괄조인을 사용하면 조인조건을 만좃하지 않는 행도 조회된다.
+			* 포괄조인 연산자는 (+) 이다.
+			* 포괄조인 연산자는 하나 이상의 null행을 생성한다.
+			* 포괄조인 연산자는 null 행이 필요한 조인옆에 붙인다.
+			예) 
+				departments의 manage_id와 employees의 employee_id
+				* 부서의 담당자정보를 조회하기 위해서 employees와 조인한다.
+				* departments의 manager_id값이 null인 행은 employees의 어느행과도 조인되지 않는다.
+				* employees측이 null행이 필요한 테이블이기 때문에 조인 조건에서 employees 측에 (+)를 붙인다.
+			예)	
+				select A.department_id, A.department_name, B.first_name
+				from departments A, employees B
+				where A. manager = B.employee_id(+);
+				* A의 manager_id는 null갑을 가진 행이 있다. 
+				* B의 employee_id는 null값을 가진 행이 없다
+				* B측의 null 행이 필요한 곳이다.
+	- 테이블 조인시 주의사항
+		- 테이블을 조인할 때는 컬럼의 이름이 같은 것끼리 조인하는 것이 아니라,
+		   같은 성질의 값을 가졌거나, 서로 관련있는 값을 가진 컬럼을 조인조건에 사용해야 한다.
+		- 조인조건을 작성할 때 조회결과에 포함되는 값들을 어느 테이블에서 획득할 수 있는지 
+		   확인하는 것이 첫번째로 할 일이다.
+		- 테이블을 조인할 때는 조인작업을 할 때마다 해당 테이블을 form절에 포함시켜야 한다.
+		* 직원의 정보, 직원의 소속부서정보, 직원의 소속부서의 관리자정보를 조회할 때,
+		    직원과 소속부서정보의 획득을 위해서 employees와 departmens가 필요하고,
+		    소속부서의 관리자 정보를 획득하기 위해서 employees가 또 필요하다.
+		    select 직원.first_name, 직원 소속부서.   소속부서 관리자
+		    from employees 직원, departments 소속부서, employees 소속부서관리자
+		    where 직원.department_id = 소속부서.department_id
+		    and 소속부서.manager_id = 소속부서관리자.employee_id
+
+그룹함수(다중행 함수)를 사용해서 데이터 집계하기
+	- 그룹함수
+		- 그룹함수는 행 집합에 작용해서 그룹 당 하나의 결과를 생성하는 함수다.
+		* 행 집합은 테이블 전체 또는 그룹화된 테이블의 행들이다.
+		* 그룹함수는 2번까지만 중첩될 수 있다.
+		- 그룹함수의 종류
+			count(* | [distinct] 컬럼명) : 행의 갯수를 반환한다.
+			min(컬럼명)		: 최솟값을 반환한다.
+			max(컬럼명)		: 최대값을 반환한다.
+			sum(컬럼명)		: 합계를 반환한다.
+			avg(컬럼명)		: 평균을 반환한다.
+	- 데이터 그룹 생성하기
+		- group by절을 사용하면 테이블의 행을 더 작은 그룹으로 나눌 수 있다.
+		        *group by 절
+			select 표현식, 그룹함수(컬럼)
+			from 테이블
+			[where 조건식]
+			[group by 표현식]
+			[order by 컬럼 ASC|DESC]
+			* 표현식은 컬럼명 혹은 연산식이다.
+			* group by 절에는 컬럼의 별칭을 사용할 수 없다
+			* select 절에 그룹함수와 같이 사용할 수 있는 표현식은
+			   group by 절에 정의된 표현식만 가능하다.
+			* select 절에서 표현식을 사용하지 않으면, 개별 그룹에 대한 결과를 확인할 수 없다.
+			* where 절을 사용하면 그룸으로 나누기 전에 불필요한 행을 제거할 수 있다.
+			    단, where 절에서는 그룹함수를 사용할 수 없다.			
+			* group by 절에 하나 이상의 표현식을 사용해서 테이블의 행을 그룹화 할 수 있다.
+			   예)
+				select department_id, job_id, count(+)
+				from employees
+				group by department_id, job_id
+				* department_id를 기준으로 먼저 그룹화를 한 후, 그 그룹내에서 다시 job_id를
+				   기준으로 그룹화를 한다.
+
+1. select문의 정의 순서
+	1.select : 조회할 컬럼명 명시
+	2.from : 실제 어떤 조회할 데이터를 갖고 있는 테이블명 명시
+	3.where : 조건(여러 개인 경우 and와 or로 묶어서 표현)
+	4.group by : 그룹화할 필드명 명시
+	5.having : 그룹화된 데이터에 적용할 조건을 명시
+
+2. select문의 실행 순서
+select	~	------ 5 실제 데이터값을 출력한다.
+from	~	------ 1 실제 조회할 데이터가 있는 테이블을 먼저 메모리에 인식
+where	~	------ 2 조건을 검색하여 조회할 데이터가 아닌 것들을 제외한다.
+group by	~	------ 3 레코드를 지정된 필드별로 중복된 것들을 하나로 묶어 그룹핑한다.
+having	~	------ 4 그룹핑된 데이터들에 조건을 적용하여 만족하지 않는 것들은 제외한다.
+order by	~	------ 6 데이터를 정렬하여 나타낸다.
+
+	
+	- 데이터 그룹에 대한 그룹함수 수행 결과에서 행을 제한하기
+		- having 절을 사용하면 그룹함수 수행 결과에서 행을 제한할 수 있다.(그룹 결과 제외)
+		- 그룹 결과가 제외되는 절차
+		   1. 행이 그룹화된다.
+		   2. 그룹화된 집합에 그룹함수가 적용된다.
+		   3. having 절의 조건식과 일치하는 그룹결과만 표시된다.
+		   * having 절은 반드시 group by 절과 같이 사용된다.
+		      (group by 없이 단독으로 having만 사용하는 것은 불가능하다.)
+		- having 절
+			select 표현식, 그룹함수(컬럼)
+			from 테이블
+			[where 조건식]
+			[group by 표현식]
+			[having 조건식]
+			[order by 컬럼 ASC|DESC] 
+서브쿼리
+	- 서브쿼리는 다른 SELECT문에 삽입된 SELECT문을 말한다.
+	- where 절, hanving절, form절에 서브쿼리를 포함시킬 수 있다.
+	  * 서브쿼리는 보통 where절이나 having절에 포함된 SELECT문을 말한다
+	- 서브쿼리
+		select 컬럼명, 컬럼명, ...
+		from 테이블명
+		where 표현식 연산자 (select 컬럼명
+				     from 테이블명
+				     [where 조건식])
+		* 서브쿼리는 메인 쿼리의 where절의 조건식에서 사용될 값을 질의하는 내부 SQL문이다.
+		* 서브쿼리는 메인 쿼리보다 먼저 실행된다.
+		* 서브쿼리의 실행결과는 메인쿼리의 조건식에서 사용된다.
+		* 서브쿼리는 괄호로 묶는다.
+		* 서브쿼리는 연산자의 오른쪽에 위치한다.
+		* 단일행 서브쿼리는 단일행 연산자를 사용하고, 다중행 서브쿼리는 다중 행 연산자를 사용한다.
+		   * 단일행 서브쿼리는 서브쿼리 실행결과 한 행만 조회되는 서브쿼리다.
+		   * 다중행 서브쿼리는 서브쿼리 실행결과 여러 행이 조회되는 서브쿼리다.
+		   * 단일행 서브쿼리 연산자
+			= != > >= < <=
+		   * 다중행 서브쿼리 연산자 
+			in any all
+
+
+
+

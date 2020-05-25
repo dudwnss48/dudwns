@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Bookstore</title>
+<link rel="stylesheet" type="text/css"href="../css/bookstore.css">
+</head>
+<body>
+<div class="wrapper">
+	<div class="navi">
+	<%
+		String position = "book";
+	%>
+	<%@ include file= "../common/navibar.jsp %>		
+	</div>
+	<div class="header">
+		<h1></h1>
+	</div>
+	<%@ include file="../common/footer.jsp" %>
+</div>
+</body>
+</html>
+
+1 .요청 파라미터 조회
+	bookno, amount 획득
+	int bookNo = Integer.parseInt(request.getParameter("bookno"));
+	int amount = Integer.parseInt(request.getParameter("amount"));
+2. 책정보 조회
+	book
+	BookDao bookDao = new BookDao();
+	BookDetailDto dto = bookDao.getBookBu No(bookNo_;
+3. 주문하는 책 정보 표시
+	표에 책정보 표시
+4. 주문정보 폼구성
+
+5. 책번호, 가격, 구매수량, 사용자 아이디를 order/order.jsp로 제출

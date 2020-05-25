@@ -1,0 +1,29 @@
+웹 프로젝트 개발환경 구성하기
+1. JDK설치하기
+2. 시스템 환경변수에
+	이름: JAVA_HOME
+	값   : C:\Program Files\Java\jdk1.8.0_241
+3. Tomcat 설치
+	http://tomcat.apache.org -> Download
+			          -> Tomcat 9 -> 32-bit/64-bit Windows Service Installer
+	다운받고 설치
+4. 이클립스 설치
+	Eclipse IDE for Enterprise Java Developers
+5. 워크스페이스 폴더 생성
+6. 문자 인코딩 방식 utf-8로 변경
+    eclipse -> window -> preference -> General workspace -> Text file encoding -> 모든걸 다 UTF-8로
+			          -> web -> css -> encoding => utf-8
+				        -> html -> encoding => utf-8
+				        -> jsp -> encoding => utf-8
+7. 이클립스와 Tomcat 연동시키기
+    eclipse -> window -> preference -> server ->  Runtime Environment
+				           ->  add 버튼 클릭 => 3번에서 설치한 Tomcat 등록
+8. 웹 프로젝트 생성
+    eclipse -> file -> new -> Dynamic Web Project 선택 -> 프로젝트명 지정 -> Finish 클릭
+9. 웹 프로젝트를 배포할 Tomcat 서버 생성하기
+    Server탭 ->  create a new server 선택 -> 7번에서 이클립스와 연동시킨 톰캣 선택 -> Finisht 클릭
+10. 웹 프로젝트 Tomcat 서버에 배포하기
+     Server탭 -> Tomcat v9.0선택 -> 마우스 우측버튼 클릭 -> Add and Remove
+	     -> 왼쪽창의 프로젝트를 Add버튼을 이용해서 오른쪽 창에 추가한다.
+11. Tomcat 서버 start & stop
+ 

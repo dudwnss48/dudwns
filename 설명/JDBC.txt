@@ -1,0 +1,223 @@
+JDBC (Java DataBase Connectivity)
+	- 자바에서 데이터베이스에 엑세스 할 수 있도록 하는 표준을 정의해놓은 것이다.
+	- java.sql과 javax.sql 패키지에 JDBC관련 표준이 정의된 인터페이스와 클래스가 위치하고 있다.
+	- JDBC에서 정의한 표준(데이터베이스 엑세스 기술 표준)은
+	  각  데이터베이스 시스템을 개발한 업체가 그 표준을 구현해서 제공하고 있다.
+	  이를, JDBC Driver(connecter)라고 부른다.
+
+JDBC 표준 API
+	java.sql.Commection 인터페이스
+		* 데이터베이스와 연결을 담당하는 객체다.
+		* SQL을 데이터베이스로 전송하고, 실행결과를 반환받기 위해서는 데이터베이스와의 연결상태가 유지되어야 한다.
+		* DriverManager의 getConnection(url, username, password) 메소드를 실행해서 획득한다.
+		* 주요 메소드
+			void commit()
+				INSERT, UPDATE, DELETE구문 실행결과를 영구적으로 DB에 반영시킨다.
+			void rollback()
+				INSERT, UPDATE, DELETE구문 실행결과의 DB반영을 취소시킨다.
+			void close()
+				데이터베이스와의 연결을 해제한다.
+			Statement createStatement()
+				SQL전송을 담당하는 Statement객체를 반환한다.
+			PreparedStatement prepareStatement(String sql)
+				SQL전송을 담당하는 PreparedStatment객체를 반환한다.
+	java.sql.Statement 인터페이스
+		* SQL의 실행과 결과값 반환을 담당하는 객체다.
+		* Statement는 보안문제로 사용하지 않는다.
+	java.sql.PreparedStatement 인터페이스
+		* SQL의 실행과 결과값 반환을 담당하는 객체다.
+		* 주요 메소드
+			int executeUpdate()
+				INSERT, UPDATE, DELETE 구문을 실행시키고, 반영된 행의 갯수를 반환한다.
+			ResultSet executeQuery()
+				SELECT 구문을 실행시키고, 조회결과를 ResultSet에 담아서 반환한다.
+			void close()
+				이 객체와 관련된 데이터베이스와 JDBC Resource를 해제시킨다.
+			void setInt(int index, int value)
+				SQL 구문에서 지정된 순번의 ? 에 정수값을 치환시킨다.
+			void setLong(int index, long value)
+				SQL 구문에서 지정된 순번의 ? 에 정수값을 치환시킨다.		
+			void setDouble(int index, double value)
+				SQL 구문에서 지정된 순번의 ? 에 실수값을 치환시킨다.		
+			void setString(int index, String value)
+				SQL 구문에서 지정된 순번의 ? 에 문자열값을 치환시킨다.		
+			void setData(int index, Date value)
+				SQL 구문에서 지정된 순번의 ? 에 날짜값을 치환시킨다.
+
+	java.sql.ResultSet 인터페이스
+		* SELECT 구문 실행결과로 획득된 테이블의 데이터를 포함하고 있는 객체다.
+		* 획득된 데이터를 조회할 수 있는 다양한 메소드를 제공한다.
+		* 주요 메소드
+			boolean next()
+				현재 위치에서 커서를 다음 행으로 이동시킨다.
+				행이 존재하면 true, 존재하지 않으면 false를 반환한다.
+			void close()
+				이 객체와 관련된 데이터베이스와 JDBC Resource 를 해제시킨다.
+			int getInt(String columnName)
+				커서가 위치한 행에서 지정된 컬럼명의 값을 반환한다.
+			long getLong(String columnName)
+				커서가 위치한 행에서 지정된 컬럼명의 값을 반환한다.
+			double getDouble(String columnName)
+				커서가 위치한 행에서 지정된 컬럼명의 값을 반환한다.
+			String getString(String columnName)
+				커서가 위치한 행에서 지정된 컬럼명의 값을 반환한다.
+			Date getDate(String columnName)
+				커서가 위치한 행에서 지정된 컬럼명의 값을 반환한다.
+
+	java.sql.ResultSetMetData 인터페이스
+		* SELECT 구문 실행결과로 획득된 테이블의 데이터에 대항 컬럼명, 컬럼타입 정보를 포함하고 있는 객체다.
+		* 개발에서 사용할 일 없음, SqlDeveloper, 쿼리박스 등의 제품을 구현할 때 주로 사용됨.
+
+	java.sql.Driver 인터페이스
+		* 모든 JDBC 드라이버가 반드시 구현해야 하는 인터페이스다.
+		* 개발에서 사용할 일 없음, 데이터베이스 시스템 제조사가 사용함.
+
+	java.sql.DriverManager 클래스
+		* JDBC driver에 대한 관리 서비스를 제공하는 객체다.
+		* JDBC driver의 등록, 해제, 등록된 JDBC driver를 이용한 데이터베이스 연결을 지원한다.
+		* 주요 메소드
+			Connection getConnection(String url, String username, String password)
+				지정된 url이 가르키는 데이터베이스와 연결된 Connection객체를 반환한다.
+
+	javax.sql.DataSource 인터페이스
+		* 모든 Connection Pool 구현 클래스가 반드시 구현해야 하는 인터페이스다.
+		* Connection Pool은 지금 설명 안할 꺼임
+		* 주요 메소드 
+			Connection getConnection()
+				Connection Pool에서 Connection을 반환한다.
+
+
+
+
+- 데이터 조작어 
+	- 테이블에 새 행 추가
+	- 테이블의 기존 행 수정
+	- 테이블에서 기존행 삭제
+	- INSERT 구문
+		insert into 테이블명 [(컬럼명[,컬럼명,...)}]   * () : 한번은 적어야한다
+		values		  (값 [, 값, ...])
+		* 컬럼명을 생략하는 경우 테이블의 컬럼 순서에 맞게 값을 나열해야하고, 값을 생략할 수 없다.
+		* 컬럼명을 나열하는 경우 나열된 컬럼에 맞게 값을 나열해야 한다.
+		* 컬럼명을 나열하는 경우 생략된 컬럼에  대해서는 null값이 저장되거나, default로 설정된 기본값이 저장된다.
+		* null값을 저장하기
+			- 컬럼을 나열할 때 해당 컬럼을 생략하면 그 컬럼에는 null값이 저장된다.
+			- values 절에서 값을 나열할 때 명시적으로 null값으로 적는다.
+		* 날짜값 저장하기
+			- 시스템의 현재  날짜/시간 정보 저장
+				sysdate
+			- 특정 날짜 및 시간값 저장
+				'2020/04/25', '2020-03-12', '2020-04-25 12:23:11', to_date('2020/03/31', 'yyyy/mm/dd')
+				to_date('2020/03/31 16:31:10', 'yyyy/mm/dd hh24:mi:ss')
+		* 일련번호 저장하기
+			- 시퀀스로부터 일련번호를 인출해서 저장하기
+				시퀀스명.nextval
+		
+
+		* 오류사항
+			- not null 로 지정된 컬럼에 값을 누락한 경우
+			- 데이터 타입이 불일치하는 경우
+			- 값의 길이가 컬럼에 지정된 데이터 길이보다 큰 경우
+			- 중복값을 허용하지 않는 기본키(Primary key), 고유키(Unique) 컬럼에 중복된 값이 저장되는 경우
+			- 외래 키 제약 조건에 위배되는 값을 저장할 때
+	`		  (해당 컬럼에 저장되는 값이 다른 외부 컬럼에 이미 존재하는 값만 저장을 허락하는 경우)
+			- 체크 제약조건에 위배되는 값을 저장할 때
+		* 다른 테이블에서 행을 복사해서 저장하기
+			insert into 대상테이블명(컬럼명, 컬럼명, ...)
+			select 컬럼명, 컬럼명,...
+			from  원본테이블명
+			[where 조건식]
+			* 대상 테이블의 컬럼명과 원본 테이블의 컬럼명이 일치할 필요는 없다.
+			* 원본 테이블과 대상 테이블의 각가의 컬럼 타입이 일치하기만 하면 된다.
+
+	- UPDATE 구문
+		update 테이블명
+		set
+			컬럼명 = 값 [, 컬럼명 = 값,...]
+		[where 조건식]
+		* where절을 생략하면 모든 행에서 해당 컬럼의 값이 지정된 갑으로 변경되어 버린다.
+		* 특별한 경우가 아니면 where절을 사용해서 조건식을 만족하는 행만 선택해서 컬럼값을 변경한다.
+		* 서브쿼리를 사용해서 획득한 값으로 컬럼의 값을 변경하는 것도 가능하다.
+		update 테이블명
+		set
+			컬럼명 = (select 컬럼명
+				 from 테이블명
+				  [where 조건식])
+		* 서브쿼리는 단일행 서브쿼리만 가능하다.
+	* 오류사항	
+		- insert문의 오류사항과 동일하다. 
+		-  자식테이블에 자식레코드(해당 컬럼의 갑을 참조하는 행)가 존재하면 컬럼의 값을 병결할 수 없다.
+		- 자식테이블에서 부모테이블의 값을 참조하는 컬럼의 값을 부모테이블에 존재하지 않는 값으로 변경할 수 없다.
+
+	- DELETE 구문
+		delete from 테이블명
+		[where 조건신]
+		* where절을 생략하면 테이블의 모든 행이 삭제된다.
+		* 특별한 경우가 아니면 where절을 사용해서 조건식을 만족하는 행만 선택해서 삭제한다.		
+	* 오류사항
+		-자식테이블에서 자식레코드가 존재하는 행은 삭제할 수 없다.
+
+
+commit => INSERT,UPDATE,DELETE
+		데이터 조작결과를 Database에 영구적으로 반영시킨다.
+rollback => I,U,D
+		데이터 조작결과의 Database 반영을 취소시킨다.
+
+
+	- MERGE 구문
+		테이블에서 조건에 따라 데이터를 갱신하거나, 추가하는 기능을 제공한다.
+		행이 존재하면 UPDATE를 수행하고, 새로운 행일 경우 INSERT를 수행한다.
+		merge int 대상테이블명 별칭
+		using 원본테이블 별칭
+		on (조인 조건식)
+		when matched then
+			update set
+			대상테이블컬럼명 = 원본테이블컬럼명,
+			대상테이블컬럼명 = 원본테이블컬럼명,
+			대상테이블컬럼명 = 원본테이블컬럼명,
+when not mached then
+	insert(대상컬럼명, 대상컬럼명, ...)
+	values(원본컬럼명, 원본컬럼명, ...)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
