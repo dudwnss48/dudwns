@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="collection/src"/>
+	<classpathentry kind="src" path="date-time/src"/>
+	<classpathentry kind="src" path="Excption/src"/>
+	<classpathentry kind="src" path="generics/src"/>
+	<classpathentry kind="src" path="io/src"/>
+	<classpathentry kind="src" path="jaba-annotation/src"/>
+	<classpathentry kind="src" path="java-enum/src"/>
+	<classpathentry kind="src" path="jdbc/src"/>
+	<classpathentry kind="src" path="lang/src"/>
+	<classpathentry kind="src" path="oop1/src"/>
+	<classpathentry kind="src" path="school-app/src"/>
+	<classpathentry kind="output" path="Excption/bin"/>
+</classpath>

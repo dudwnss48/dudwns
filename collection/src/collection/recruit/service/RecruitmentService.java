@@ -44,7 +44,7 @@ public class RecruitmentService {
 		for(Recruitment r1 :recruitments) {
 			int count = 0;
 			ArrayList<Career>careers1 = r1.getCareers();
-			careers1.g
+			careers1.get(recruitmentNo);
 			if(resume.getDept() == r1.getResume().getDept()) {
 				count++;
 			
